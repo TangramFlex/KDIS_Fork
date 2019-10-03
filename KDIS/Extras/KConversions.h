@@ -36,10 +36,14 @@ http://p.sf.net/kdis/UserGuide
                 unit conversion etc
 *********************************************************************/
 
+// SIGNIFICANT mods made by Joe Richardson to align the functions
+// with a functional programming model.
+
 #pragma once
 
 #include "./../KDefines.h"
 #include <cmath>
+#include <tuple>
 
 #ifndef KDIS_PI
     #define KDIS_PI 3.14159265358979323846
@@ -53,13 +57,13 @@ namespace UTILS {
 /************************************************************************/
 
 template<class Type>
-inline Type RadToDeg( Type Rad )
+inline Type RadToDeg(const Type Rad )
 {
     return static_cast<Type>(Rad * ( 180.0 / KDIS_PI ));
 };
 
 template<class Type>
-inline Type DegToRad( Type Deg )
+inline Type DegToRad(const Type Deg )
 {
     return static_cast<Type>(Deg * ( KDIS_PI / 180.0 ));
 };
@@ -69,15 +73,15 @@ inline Type DegToRad( Type Deg )
 /************************************************************************/
 
 template<class Type>
-inline Type FeetToMeters( Type Feet )
+inline Type FeetToMeters(const Type Feet )
 {
     return static_cast<Type>(Feet / 3.2808);
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-template<class Type>
-inline Type MetersToFeet( Type Meters )
+template <class Type>
+inline Type MetersToFeet(const Type Meters)
 {
     return static_cast<Type>(Meters * 3.2808);
 };
@@ -121,171 +125,92 @@ enum RefEllipsoid
 
 //////////////////////////////////////////////////////////////////////////
 
-template<class Type>
-inline void GetEllipsoidAxis( RefEllipsoid R, Type & MajorAxis, Type & MinorAxis )
+// Returns major minor axis
+template <class Type>
+std::tuple<KFLOAT32, KFLOAT32> GetEllipsoidAxis(const RefEllipsoid R)
 {
     switch( R )
     {
     case Airy:
-        MajorAxis = static_cast<Type>(6377563.396);
-        MinorAxis = static_cast<Type>(6356256.909);
-        // 1/F 299.324965
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377563.396, 6356256.909);
 
     case Airy_Modified:
-        MajorAxis = static_cast<Type>(6377340.189);
-        MinorAxis = static_cast<Type>(6356034.448);
-        // 1/F 299.324965
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377340.189, 6356034.448);
 
     case Australian_National:
-        MajorAxis = static_cast<Type>(6378160.000);
-        MinorAxis = static_cast<Type>(6356774.719);
-        // 1/F 298.250000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378160.000, 6356774.719);
 
     case Bessel_1841:
-        MajorAxis = static_cast<Type>(6377397.155);
-        MinorAxis = static_cast<Type>(6356078.963);
-        // 1/F 299.152813
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377397.155, 6356078.963);
 
     case Bessel_1841_Namibia:
-        MajorAxis = static_cast<Type>(6377483.865);
-        MinorAxis = static_cast<Type>(6356078.963);
-        // 1/F 299.152813
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377483.865, 6356078.963);
 
     case Clarke_1866:
-        MajorAxis = static_cast<Type>(6378206.400);
-        MinorAxis = static_cast<Type>(6356583.800);
-        // 1/F 294.978698
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378206.400, 6356583.800);
 
     case Clarke_1880:
-        MajorAxis = static_cast<Type>(6378249.145);
-        MinorAxis = static_cast<Type>(6356514.870);
-        // 1/F 293.465000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378249.145, 6356514.870);
 
     case Everest_Sabah_Sarawak:
-        MajorAxis = static_cast<Type>(6377298.556);
-        MinorAxis = static_cast<Type>(6356097.550);
-        // 1/F 300.801700
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377298.556, 6356097.550);
 
     case Everest_1830:
-        MajorAxis = static_cast<Type>(6377276.345);
-        MinorAxis = static_cast<Type>(6356075.413);
-        // 1/F 300.801700
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377276.345, 6356075.413);
 
     case Everest_1948:
-        MajorAxis = static_cast<Type>(6377304.063);
-        MinorAxis = static_cast<Type>(6356103.039);
-        // 1/F 300.801700
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377304.063, 6356103.039);
 
     case Everest_1956:
-        MajorAxis = static_cast<Type>(6377301.243);
-        MinorAxis = static_cast<Type>(6356100.228);
-        // 1/F 300.801700
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377301.243, 6356100.228);
 
     case Everest_1969:
-        MajorAxis = static_cast<Type>(6377295.664);
-        MinorAxis = static_cast<Type>(6356094.668);
-        // 1/F 300.801700
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6377295.664, 6356094.668);
 
     case Fischer_1960:
-        MajorAxis = static_cast<Type>(6378166.000);
-        MinorAxis = static_cast<Type>(6356784.284);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378166.000, 6356784.284);
 
     case Fischer_1960_Modified:
-        MajorAxis = static_cast<Type>(6378155.000);
-        MinorAxis = static_cast<Type>(6356773.320);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378155.000, 6356773.320);
 
     case Fischer_1968:
-        MajorAxis = static_cast<Type>(6378150.000);
-        MinorAxis = static_cast<Type>(6356768.337);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378150.000, 6356768.337);
 
     case GRS_1980:
-        MajorAxis = static_cast<Type>(6378137.000);
-        MinorAxis = static_cast<Type>(6356752.314);
-        // 1/F 298.257222
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378137.000, 6356752.314);
 
     case Helmert_1906:
-        MajorAxis = static_cast<Type>(6378200.000);
-        MinorAxis = static_cast<Type>(6356818.170);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378200.000, 6356818.170);
 
     case Hough:
-        MajorAxis = static_cast<Type>(6378270.000);
-        MinorAxis = static_cast<Type>(6356794.343);
-        // 1/F 297.000000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378270.000, 6356794.343);
 
     case International_1924:
-        MajorAxis = static_cast<Type>(6378388.000);
-        MinorAxis = static_cast<Type>(6356911.946);
-        // 1/F 297.000000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378388.000, 6356911.946);
 
     case Karsovsky_1940:
-        MajorAxis = static_cast<Type>(6378245.000);
-        MinorAxis = static_cast<Type>(6356863.019);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378245.000, 6356863.019);
 
     case SGS_1985:
-        MajorAxis = static_cast<Type>(6378136.000);
-        MinorAxis = static_cast<Type>(6356751.302);
-        // 1/F 298.257000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378136.000, 6356751.302);
 
     case South_American_1969:
-        MajorAxis = static_cast<Type>(6378160.000);
-        MinorAxis = static_cast<Type>(6356774.719);
-        // 1/F 298.250000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378160.000, 6356774.719);
 
     case Sphere_6371km:
-        MajorAxis = static_cast<Type>(6371000);
-        MinorAxis = static_cast<Type>(6371000);
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6371000,     6371000);
 
     case WGS_1960:
-        MajorAxis = static_cast<Type>(6378165.000);
-        MinorAxis = static_cast<Type>(6356783.287);
-        // 1/F 298.300000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378165.000, 6356783.287);
 
     case WGS_1966:
-        MajorAxis = static_cast<Type>(6378145.000);
-        MinorAxis = static_cast<Type>(6356759.769);
-        // 1/F 298.250000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378145.000, 6356759.769);
 
     case WGS_1972:
-        MajorAxis = static_cast<Type>(6378135.000);
-        MinorAxis = static_cast<Type>(6356750.520);
-        // 1/F 298.260000
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378135.000, 6356750.520);
 
     case WGS_1984:
-        MajorAxis = static_cast<Type>(6378137.000);
-        MinorAxis = static_cast<Type>(6356752.314245);
-        // 1/F 298.257224
-        break;
+        return std::make_tuple<KFLOAT32, KFLOAT32>(6378137.000, 6356752.314245);
     }
 };
 
@@ -329,22 +254,23 @@ inline Type DMSToDecimal(const Type Deg, const Type Min, const Type Sec )
 //************************************
 
 template<class Type>
-inline void GeodeticToGeocentric( const Type GeodeticLat, const Type GeodeticLon, const Type GeodeticHeight,
-                                  Type & GeocentricX, Type & GeocentricY, Type & GeocentricZ,
-                                  const RefEllipsoid R )
+std::tuple<Type, Type, Type> GeodeticToGeocentric( const Type GeodeticLat, const Type GeodeticLon, const Type GeodeticHeight, const RefEllipsoid R )
 {
-    GeodeticLat = DegToRad( GeodeticLat );
-    GeodeticLon = DegToRad( GeodeticLon );
+    Type geodeticLat_rad = DegToRad(GeodeticLat);
+    Type geodeticLon_rad = DegToRad(GeodeticLon);
 
-    Type MajorAxis, MinorAxis;
-    GetEllipsoidAxis( R, MajorAxis, MinorAxis );
+    std::tuple<KFLOAT32, KFLOAT32> axis = GetEllipsoidAxis(R);
+    Type MajorAxis = static_cast<Type>(std::get<0>(axis));
+    Type MinorAxis = static_cast<Type>(std::get<1>(axis));
 
     Type Esq = ( pow( MajorAxis, 2 ) - pow( MinorAxis, 2 ) ) / pow( MajorAxis, 2 );
-    Type V = MajorAxis / sqrt( 1 - ( Esq * pow( sin( GeodeticLat ), 2 ) ) );
+    Type V = MajorAxis / sqrt(1 - (Esq * pow(sin(geodeticLat_rad), 2)));
 
-    GeocentricX = ( V + GeodeticHeight ) * cos( GeodeticLat ) * cos( GeodeticLon );
-    GeocentricY = ( V + GeodeticHeight ) * cos( GeodeticLat ) * sin( GeodeticLon );
-    GeocentricZ = ( ( 1 - Esq ) * V + GeodeticHeight ) * sin( GeodeticLat );
+    Type GeocentricX = (V + GeodeticHeight) * cos(geodeticLat_rad) * cos(geodeticLon_rad);
+    Type GeocentricY = (V + GeodeticHeight) * cos(geodeticLat_rad) * sin(geodeticLon_rad);
+    Type GeocentricZ = ((1 - Esq) * V + GeodeticHeight) * sin(geodeticLat_rad);
+
+    return std::make_tuple(GeocentricX, GeocentricY, GeocentricZ);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -362,7 +288,7 @@ inline void GeodeticToGeocentric( const Type GeodeticLat, const Type GeodeticLon
 //************************************
 
 template<class Type>
-inline void GeocentricToGeodetic(const Type x, const Type y, const Type z, Type & lat, Type & lon, Type & alt, const RefEllipsoid R )
+std::tuple<Type, Type, Type> GeocentricToGeodetic(const Type x, const Type y, const Type z, const RefEllipsoid R )
 {
     // This is the 'closed form solution'
     // equations described by https://microem.ru/files/2012/08/GPS.G1-X-00006.pdf
@@ -381,50 +307,62 @@ inline void GeocentricToGeodetic(const Type x, const Type y, const Type z, Type 
     Type const theta = static_cast<Type>(atan2 ( (z*a) , (p*b)));
 
     // latitude
-    lat = static_cast<Type>(atan2 ( ( z + (e_prime2) * b * pow (sin(theta),3) ),
-                                    ( p - (e2*a*pow(cos(theta),3)))));
+    Type lat = static_cast<Type>(atan2 ( ( z + (e_prime2) * b * pow (sin(theta),3) ), ( p - (e2*a*pow(cos(theta),3)))));
 
     // Radius of curvature
     Type const N = a / sqrt ( 1 - e2*sin(lat)*sin(lat));
 
     // altitude
+    Type alt;
     Type cosLat = cos(lat);
     Type const COS_THRESHOLD = 0.0000001;
     if( (cosLat > -COS_THRESHOLD) && (cosLat < COS_THRESHOLD) ) // Very near the poles
+    {
         alt = std::abs( z ) - b;
+    }
     else
+    {
         alt = p / cosLat - N;
+    }
 
     // longitude
-    lon = static_cast<Type>(atan2(y,x));
+    Type lon = static_cast<Type>(atan2(y,x));
 
     lon = RadToDeg( lon );
     lat = RadToDeg( lat );
+
+    return std::make_tuple(lat, lon, alt);
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-template<class Type>
-inline void RotateAboutAxis( Type d[3] ,Type const s[3] ,Type const n[3] ,Type  t )
+// Return tuple which was array d[3]
+template <class Type>
+std::tuple<Type, Type, Type> RotateAboutAxis(const Type s[3], const Type n[3], const Type t)
 {
     double  st = sin( t );
     double  ct = cos( t );
 
-    d[0] = static_cast<Type>((1.0-ct)*(n[0]*n[0]*s[0] + n[0]*n[1]*s[1] + n[0]*n[2]*s[2]) + ct*s[0] + st*(n[1]*s[2]-n[2]*s[1]));
-    d[1] = static_cast<Type>((1.0-ct)*(n[0]*n[1]*s[0] + n[1]*n[1]*s[1] + n[1]*n[2]*s[2]) + ct*s[1] + st*(n[2]*s[0]-n[0]*s[2]));
-    d[2] = static_cast<Type>((1.0-ct)*(n[0]*n[2]*s[0] + n[1]*n[2]*s[1] + n[2]*n[2]*s[2]) + ct*s[2] + st*(n[0]*s[1]-n[1]*s[0]));
+    return std::make_tuple(
+        static_cast<Type>((1.0-ct)*(n[0]*n[0]*s[0] + n[0]*n[1]*s[1] + n[0]*n[2]*s[2]) + ct*s[0] + st*(n[1]*s[2]-n[2]*s[1])),
+        static_cast<Type>((1.0-ct)*(n[0]*n[1]*s[0] + n[1]*n[1]*s[1] + n[1]*n[2]*s[2]) + ct*s[1] + st*(n[2]*s[0]-n[0]*s[2])),    
+        static_cast<Type>((1.0-ct)*(n[0]*n[2]*s[0] + n[1]*n[2]*s[1] + n[2]*n[2]*s[2]) + ct*s[2] + st*(n[0]*s[1]-n[1]*s[0]))
+    );
 };
 
-template<class Type>
-inline void Cross( Type  d[3] ,Type const  a[3] ,Type const b[3] )
+// Return tuple which was array d[3]
+template <class Type>
+std::tuple<Type, Type, Type> Cross(Type const a[3], Type const b[3])
 {
-    d[0] = a[1] * b[2] - b[1] * a[2] ;
-    d[1] = b[0] * a[2] - a[0] * b[2] ;
-    d[2] = a[0] * b[1] - b[0] * a[1] ;
+    return std::make_tuple(
+        a[1] * b[2] - b[1] * a[2],
+        b[0] * a[2] - a[0] * b[2],
+        a[0] * b[1] - b[0] * a[1]
+    );
 };
 
 template<class Type>
-inline Type Dot( Type const a[3] ,Type const b[3] )
+Type Dot( Type const a[3] ,Type const b[3] )
 {
     return  a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 };
@@ -437,9 +375,7 @@ inline Type Dot( Type const a[3] ,Type const b[3] )
 // Parameter:   Type R - Roll in radians
 // Parameter:   Type Lat - Geodetic Latitude in radians
 // Parameter:   Type Lon - Geodetic Longitude in radians
-// Parameter:   Type & Psi - Euler angle out
-// Parameter:   Type & Theta - Euler angle out
-// Parameter:   Type & Phi - Euler angle out
+// Return:      tuple<Psi, Theta, Phi> (Euler Angles)
 //************************************
 
 template<class Type>

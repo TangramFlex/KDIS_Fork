@@ -329,7 +329,7 @@ inline Type DMSToDecimal(const Type Deg, const Type Min, const Type Sec )
 //************************************
 
 template<class Type>
-inline void GeodeticToGeocentric( const Type GeodeticLat, const Type GeodeticLon, const Type GeodeticHeight,
+inline void GeodeticToGeocentric( Type GeodeticLat, Type GeodeticLon, const Type GeodeticHeight,
                                   Type & GeocentricX, Type & GeocentricY, Type & GeocentricZ,
                                   const RefEllipsoid R )
 {
